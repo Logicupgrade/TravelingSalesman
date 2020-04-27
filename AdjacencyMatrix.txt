@@ -4,7 +4,7 @@ Salt Lake City = 2;
 Seattle = 3;
 Las Vegas = 4;
 
-int adjacencyMatrix
+int adjacencyMatrix[5][5]
 {
     {0,218,518,704,439},    //Reno
     {218,0,0,808,569},      //SF
