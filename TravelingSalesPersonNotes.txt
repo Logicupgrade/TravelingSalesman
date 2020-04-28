@@ -1,0 +1,55 @@
+//All connect except SF and SLC
+
+Reno = 0;
+San Francisco = 1;
+Salt Lake City = 2;
+Seattle = 3;
+Las Vegas = 4;
+
+int adjacencyMatrix[5][5]
+{
+    {99999,218,518,704,439},        //Reno
+    {218,99999,99999,808,569},      //SF
+    {518,99999,99999,840,421},      //SLC
+    {704,808,840,99999,1125},       //Seattle
+    {439,569,421,1125,99999}        //Vegas
+}
+
+// shortestPath of( (all posible combinations) - (combinations with SF to SLC) - (combinations with SLC to SF) )
+
+//**Important assumption: only visit every city once except departs and arrives initial city 
+
+//guess at shortest path: path{R,SF,S,SLC,LV,R}, distances{218,808,840,421,439}, total distance: 2726
+
+
+OOP Design:
+
+-Graph Class
+-Stack(possibly)
+-Queue(possibly)
+
+Graphs as ADTs(from slides)
+• ADT graph operations
+    • Test if empty
+    • Get number of vertices, edges in a graph
+    • See if edge exists between two given vertices
+    • Add vertex to graph whose vertices have distinct, different values from new vertex
+    • Add/remove an edge between two given vertices
+    • Remove vertex, edges to other vertices
+    • Retrieve vertex that contains a given value
+
+
+-array of locations
+-adjacency matrix
+-all possible paths (possibly lexicographic order)
+
+    1.find largest x such that P[x]<P[x+1].
+        (if no such x, P is last Permutation)
+    2.find the largest y such that P[x]<P[y].
+    3.swap P[x] and P[y]
+    4.Reverse P[x+1..n].
+(https://www.youtube.com/watch?v=goUlyp4rwiU)
+
+-sum of paths
+-best path
+
