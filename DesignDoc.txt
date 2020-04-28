@@ -1,0 +1,39 @@
+
+OOP Design:
+
+//-Vertex Class
+//    private:
+//        ItemType Item;
+//        LinkedList<Vertex>  listOfConnections;
+//        LinkedList<int>     listConnectionWeights;
+//    public:
+//        addConnection(Vertex newConnection);
+//        removeConnection(Vertex oldConnection);
+
+-Graph Class
+    private:
+        int adjMatrix[numPaths][numPaths];
+    public:
+        Graph(int numPaths);
+//      addVertex(Vertex newVertex);
+        setVertex(ItemType newVertex, int connections[n]);
+
+-Path Class
+    private:
+        int array[n+1];
+    public:
+        setAtIndex(int index);
+        getAtIndex(int index);
+
+-Stack Class(possibly)
+    -Node
+-Queue Class(possibly)
+    -Node
+
+
+-ShortestBrute Class
+    private:
+        Graph       theGraph;
+        Stack<Path>  stackOfPaths;
+    
+        

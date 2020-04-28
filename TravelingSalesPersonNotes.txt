@@ -22,12 +22,6 @@ int adjacencyMatrix[5][5]
 //guess at shortest path: path{R,SF,S,SLC,LV,R}, distances{218,808,840,421,439}, total distance: 2726
 
 
-OOP Design:
-
--Graph Class
--Stack(possibly)
--Queue(possibly)
-
 Graphs as ADTs(from slides)
 • ADT graph operations
     • Test if empty
