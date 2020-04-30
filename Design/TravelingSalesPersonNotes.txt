@@ -1,0 +1,69 @@
+//All connect except SF and SLC
+
+Reno = 0;
+Salt Lake City = 1;
+San Francisco = 2;
+Las Vegas = 3;
+Seattle = 4;
+
+int adjacencyMatrix[5][5]
+{
+    {99999,518,218,439,704},        //Reno
+    {518,99999,99999,421,840},      //SLC
+    {218,99999,99999,569,808},      //SF
+    {439,421,569,99999,1125},       //Vegas
+    {704,840,808,1125,99999}        //Seattle
+}
+
+// shortestPath of( (all posible combinations) - (combinations with SF to SLC) - (combinations with SLC to SF) )
+
+//**Important assumption: only visit every city once except departs and arrives initial city 
+
+//guess at shortest path: path{R,SF,S,SLC,LV,R}, distances{218,808,840,421,439}, total distance: 2726
+
+
+Graphs as ADTs(from slides)
+• ADT graph operations
+    • Test if empty
+    • Get number of vertices, edges in a graph
+    • See if edge exists between two given vertices
+    • Add vertex to graph whose vertices have distinct, different values from new vertex
+    • Add/remove an edge between two given vertices
+    • Remove vertex, edges to other vertices
+    • Retrieve vertex that contains a given value
+
+
+-array of locations
+-adjacency matrix
+-all possible paths (possibly lexicographic order)****checkout STL function next_permutation()*******
+
+    1.find largest x such that P[x]<P[x+1].
+        (if no such x, P is last Permutation)
+    2.find the largest y such that P[x]<P[y].
+    3.swap P[x] and P[y]
+    4.Reverse P[x+1..n].
+
+(https://www.youtube.com/watch?v=goUlyp4rwiU)
+
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+
+int main()
+{
+    int arry[4] = {2,3,4,5};
+
+    do 
+    {
+        std::cout << arry[0] << ' ' << arry[1] << ' ' << arry[2] << '\n';
+    } 
+    while ( std::next_permutation(arry,arry+4) );
+
+    return 0;
+}
+
+-sum of paths
+-best path
+
