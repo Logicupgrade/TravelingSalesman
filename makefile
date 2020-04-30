@@ -4,18 +4,17 @@ CFLAGS = -Wall -c $(DEBUG)
 LFLAGS = -Wall $(DEBUG) 
 
 #******* TravelingSalesPerson Driver************************
-#links o files
 TravelingSalesPerson : TravelingSalesPerson.o Path.o #Graph.cpp
 	$(CC) $(LFLAGS)  TravelingSalesPerson.o -o TravelingSalesPerson
 
-#Creates Driver o file
 TravelingSalesPerson.o : TravelingSalesPerson.cpp Path.cpp #Graph.cpp  
 	$(CC) $(CFLAGS)  TravelingSalesPerson.cpp
 # **********************************************************
 # *******Testing Graph************************
+##links o files
 # GraphTest : GraphTest.o  Graph.o Path.o
 # 	$(CC) $(LFLAGS)  GraphTest.o  -o GraphTest
-
+##Creates Driver o file
 # GraphTest.o : GraphTest.cpp Graph.cpp Path.cpp
 # 	$(CC) $(CFLAGS)  GraphTest.cpp
 # *******************************************
