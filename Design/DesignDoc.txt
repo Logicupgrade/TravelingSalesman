@@ -41,16 +41,18 @@ Description: Adjacency matrix based
 	int** 	adjacencyMatrix;
 	int 	vertexCount;
 	int 	minPathCost;
-	Path 	minPath;	 		 
+	Path* 	minPath;	 		 
         	
     public:
-        Graph(int numVertex, string* newVertices);
+        Graph(int numVertex, string* newVertices, int** adjMatrix);
 	Graph(Graph &other);	
-
+	
+	void setMatrix( int numVertices, int** adjMatrix );
         setVertexConnections(int vertexIndex, int* connections);
-        string getConnectionValue(int vertexIndex, int connectionIndex);
+        int getConnectionValue(int vertexIndex, int connectionIndex);
+	string getVertexName(int vertexIndex);
 	int TraversePath(Path currentPath);	  //returns weight of path after traversal
-
+	void displayMatrix();
 
 
 (Path Class)	
@@ -71,7 +73,7 @@ in main():
 	int		ShortestPathCost;	//store shortest path cost, set using Graph::TraversePath()
 
 Functions:
-	Graph		ReadGraphFromFile(std::string filename);
+	Graph		ReadGraphFromFile(std::string filename); 
         stack<Path>     generatePaths(int numVertices);	
         void    	findShortestPath(Graph g, Stack<Path> s);
         void    	displayPaths(stack<Path> pathsToDisplay, int numVertices);
