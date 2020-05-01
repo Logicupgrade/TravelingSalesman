@@ -2,16 +2,20 @@
 
 #include <iostream>
 #include <stack>
+#include <string>
 #include <algorithm>
 
 using namespace std;
 
-
-stack<Path> generatePaths(int numPaths);
-void displayPaths( stack<Path> pathsToDisplay, int numVertices );
-
-int main()
+class GraphPlaceholder
 {
+private:
+	string* vertices;
+	int** 	adjacencyMatrix;
+	int 	vertexCount;
+	int 	minPathCost;
+	Path 	minPath;
+
 	// int adjacencyMatrix[numVertices][numVertices]
 	// {
 	//     {99999,518,218,439,704},        //Reno 		0
@@ -20,8 +24,35 @@ int main()
 	//     {439,421,569,99999,1125},       //Vegas		3
 	//     {704,840,808,1125,99999}        //Seattle	4
 	// };
+	
 
-	//int minPath;
+public:
+	GraphPlaceholder(int numVertex, string* newVertices)
+	{
+
+	}
+	bool setVertexConnections(int vertexIndex, int* connections)
+	{
+
+	}
+	string getConnectionValue(int vertexIndex, int connectionIndex)
+	{
+
+	}
+	int traversePath(Path currentPath)
+	{
+
+	}
+}
+
+
+
+stack<Path> generatePaths(int numVertices);
+void displayPaths( stack<Path> pathsToDisplay, int numVertices );
+
+int main()
+{
+	
 
 	//important to most of generation
 	int vertexCount = 5;

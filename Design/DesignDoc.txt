@@ -37,26 +37,29 @@ Solution Design:
 (Graph Class)
 Description: Adjacency matrix based
     private:
-	const int numVertex;	                            //will not need if list of templates
-        ItemType    vertices[numVertex];	            //names of vertices, change to list of strings rather than template array?
-        int         adjMatrix[numVertex][numVertex];	//Use pointer to dynamic memory instead of array? allows graph to change size
+	string* vertices;			//names of vertices
+	int** 	adjacencyMatrix;
+	int 	vertexCount;
+	int 	minPathCost;
+	Path 	minPath;	 		 
+        	
     public:
-        Graph(int numVertex, ItemType newVertices[]);
+        Graph(int numVertex, string* newVertices);
 	Graph(Graph &other);	
 
-        setVertex(int vertexIndex, ItemType newVertex, int connections[]);
-        ItemType getVertexAt(int index);
-	int TraversePath(Path p);	                        //returns weight of path after traversal
+        setVertexConnections(int vertexIndex, int* connections);
+        string getConnectionValue(int vertexIndex, int connectionIndex);
+	int TraversePath(Path currentPath);	  //returns weight of path after traversal
 
 
 
 (Path Class)	
 Description: Bare bones, contains int array with each element corresponding to a vertex in a graph.
     private: 
-        int         array[6] = {0,0,0,0,0,0};     //{0,x,x,x,x,0} Reno = index 0
+        int* pathIndexArray;     //{0,x,x,x,x,0} Reno = index 0
     public:
-        Path(int pathIntArray)
-        void    setAtIndex(int index);
+        Path(int* innerCityIndexArray, int arraySize)
+        void    setAtIndex(int index, int cityIndex);
         int     getDataAtIndex(int index);
 
 
@@ -68,8 +71,11 @@ in main():
 	int		ShortestPathCost;	//store shortest path cost, set using Graph::TraversePath()
 
 Functions:
-	Graph	ReadGraphFromFile(std::string filename);
-        bool    generatePaths(Graph g, Stack<Path> s);	
-        void    findShortestPath(Graph g, Stack<Path> s);
-        void    displayPaths(Stack<path> s);
-        bool    writePathsToFile(std::string filename);
+	Graph		ReadGraphFromFile(std::string filename);
+        stack<Path>     generatePaths(int numVertices);	
+        void    	findShortestPath(Graph g, Stack<Path> s);
+        void    	displayPaths(stack<Path> pathsToDisplay, int numVertices);
+        bool    	writePathsToFile(std::string filename);
+
+
+
