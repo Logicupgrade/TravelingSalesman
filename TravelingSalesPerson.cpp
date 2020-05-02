@@ -18,16 +18,6 @@ private:
 	int 	minPathCost;
 	Path* 	minPath;
 
-	// int adjacencyMatrix[numVertices][numVertices]
-	// {
-	//     {99999,518,218,439,704},        //Reno 		0
-	//     {518,99999,99999,421,840},      //SLC  		1
-	//     {218,99999,99999,569,808},      //SF   		2
-	//     {439,421,569,99999,1125},       //Vegas		3
-	//     {704,840,808,1125,99999}        //Seattle	4
-	// };
-	
-
 public:
 	GraphPlaceholder(int numVertex, string* newVertices, int** adjMatrix):vertexCount(numVertex)
 	{
@@ -81,11 +71,11 @@ public:
 		return vertices[vertexIndex];
 	}
 
-	int traversePath(Path currentPath)
+	int traversePath(Path& currentPath)
 	{
 		int sum = 0;
-
-		for(int i=0;i<vertexCount+1;i++)
+		
+		for(int i=0;i<currentPath.getPathArraySize()-1;i++)
 		{
 			sum += getConnectionValue( currentPath.getCityIndexAt(i),currentPath.getCityIndexAt(i+1) );
 		}
@@ -108,9 +98,12 @@ public:
 };
 
 
-/*Graph*/GraphPlaceholder ReadGraphFromFile(string filename);
-stack<Path> generatePaths(int numVertices);
+GraphPlaceholder ReadGraphFromFile(string filename);
+stack<Path> generatePaths(int numVertices, GraphPlaceholder aGraph);
+Path findShortestPath(GraphPlaceholder aGraph, stack<Path> pathStack);
 void displayPaths( stack<Path> pathsToDisplay, int numVertices );
+bool writePathsToFile(string filename);
+
 
 int main()
 {
@@ -120,46 +113,19 @@ int main()
 	int vertexCount = 5;
 
 	stack<Path> flapjacks;
+	GraphPlaceholder theGraph = ReadGraphFromFile(inputFile);
 
-	flapjacks = generatePaths(vertexCount);
+	// int testPath[4]= {1,2,3,4};
+	// Path TestPath(testPath,4);
+	// theGraph.displayMatrix();
+
+	flapjacks = generatePaths(vertexCount,theGraph);
+
 	displayPaths( flapjacks, vertexCount );
 
-	ReadGraphFromFile(inputFile).displayMatrix();
+	
 
-
-	int lowestPathCost = 1000000;
-	Path* lowestPath;
-
-	int pathCount = 1;
-	while( !flapjacks.empty() )
-	{	
-		int pathCost;
-		cout<<"Path "<<pathCount<<": [";
-		for(int i=0;i<vertexCount+1;i++)
-		{
-			cout<<flapjacks.top().getCityIndexAt(i);
-			if(i != vertexCount)
-			{
-				cout<<",";
-			}
-			else
-			{
-				cout<<"]"<<endl;
-			}
-		}
-		pathCost = ReadGraphFromFile(inputFile).traversePath( flapjacks.top() );
-		cout<<"Path Cost: "<<pathCost<<endl;
-
-		if(pathCost<lowestPathCost)
-		{
-			lowestPathCost = pathCost;
-			//lowestPath = flapjacks.top(); //**** need to write Path copy constructor and possibly =operator overload 
-		}
-		flapjacks.pop();
-		pathCount++;
-	}
-
-	cout<<"Lowest Path Cost!: "<<lowestPathCost<<endl;
+	findShortestPath(theGraph, flapjacks);
 	
 
 	return 0;
@@ -186,8 +152,6 @@ GraphPlaceholder ReadGraphFromFile(string filename)
 	{
 		countVertices++;
 	}
-
-	// cout<<"countVertices: "<<countVertices<<endl;
 
 	vertices = new string [countVertices];
 
@@ -243,33 +207,6 @@ GraphPlaceholder ReadGraphFromFile(string filename)
 
 	getGraph.close();
 
-	// cout<<"row: "<<row<<", col: "<<column<<endl;
-
-	
-	//check vertices Array
-	// cout<<"Vertex: ";
-	// for(int i=0;i<countVertices;i++)
-	// {
-	// 	 cout<<vertices[i];
-	// 	 if(i != (countVertices-1))
-	// 	 {
-	// 	 	cout<<",";
-	// 	 } 
-	// }
-	// cout<<endl;
-	// cout<<"}"<<endl;   //*******cout is fked when using "}" or "]"
-		 
-	
-	// check 2d matrix
-	// for(int i=0; i<countVertices; i++)
-	// {
-	// 	for(int j=0; j<countVertices; j++)
-	// 	{
-	// 		cout<<"Matrix["<<i<<"]["<<j<<"]="<<inMatrix[i][j]<<" , ";
-	// 	}
-	// 	cout<<endl;
-	// }
-
 	GraphPlaceholder inGraph(countVertices, vertices, inMatrix);
 
 	return inGraph;
@@ -281,10 +218,11 @@ GraphPlaceholder ReadGraphFromFile(string filename)
 //for this project we will use the array {{1,2}}
 //use int** noEdgePairArray as parameter
 //put ifs in forloop iterating though all noEdgePair
-stack<Path> generatePaths(int numVertices)
+stack<Path> generatePaths(int numVertices, GraphPlaceholder aGraph)
 {
+	stack<Path> lameStack;
+
 	int permArraySize = numVertices-1;
-	stack<Path> pathStack;
 
 	//array of individual permutation 
 	int permArray[permArraySize];
@@ -294,12 +232,6 @@ stack<Path> generatePaths(int numVertices)
 	{
 		permArray[i] = i+1;
 	}
-
-	//sanitycheck prints permArray
-	// for(int i=0;i<numVertices-1;i++)
-	// {
-	// 	cout<<"permArray["<<i<<"]"<<permArray[i]<<endl;
-	// }
 
     do 
     {	
@@ -318,28 +250,102 @@ stack<Path> generatePaths(int numVertices)
     	}
     	if(canDo)
     	{
-    		//creates path with current permutation excluding nonedgeVertices
-    		Path tempPushPath(permArray,numVertices-1);
+
+    		//temporary Path used to turn permutation into Path and push stack
+			Path tempPushPath(permArray,numVertices-1);
+
+    		//set traveral time 
+    		tempPushPath.setTraversalCost( aGraph.traversePath(tempPushPath) );
+
+    		
+    		//set city name array using graph as reference
+    		for( int i=0;i<tempPushPath.getPathArraySize();i++ )
+    		{
+	   			tempPushPath.setCityNameAt( aGraph.getVertexName( tempPushPath.getCityIndexAt(i) ) , i);
+    		}
+
     		//pushes path to stack
-    		pathStack.push(tempPushPath);
+    		lameStack.push(tempPushPath);///**OLD Isssue resolved, but keeping as reminder to research dynamic allocation for multiple arrays in stack and Object Scope
+
     	}
         
     } 
-    while ( std::next_permutation(permArray,permArray+permArraySize) );
+    while ( next_permutation(permArray,permArray+permArraySize) );
 
-    return pathStack;
+    return lameStack;
+}
+
+Path findShortestPath(GraphPlaceholder aGraph, stack<Path> pathStack)
+{
+	int vertexCount = pathStack.top().getPathArraySize();
+
+	int lowestPathCost = 1000000;
+	int tempPath[vertexCount+1];
+	int currentPathCost;
+
+	for(int i=0;i<vertexCount;i++)
+	{
+		tempPath[i]=0;
+	}
+
+	Path lowestPath(tempPath,vertexCount);
+
+	while( !pathStack.empty() )
+	{	
+		//Path Display function *******************************
+		
+		//*****************************************************
+
+		currentPathCost = aGraph.traversePath( pathStack.top() );
+
+		if( currentPathCost < lowestPathCost )
+		{
+			lowestPathCost = currentPathCost;
+			lowestPath = pathStack.top();
+		}
+		pathStack.pop();
+	}
+
+	
+	cout<<"Shortest Path!: [";
+	for( int i=0; i<lowestPath.getPathArraySize();i++ )
+	{
+		cout<<lowestPath.getCityIndexAt(i);
+		if(i != lowestPath.getPathArraySize()-1)
+		{
+			cout<<",";
+		}
+		else
+		{
+			cout<<"]"<<endl;
+		}
+	}
+	
+	cout<<"Shortest Path Cost!: "<<lowestPathCost<<endl;
+
+	return lowestPath;
 }
 
 void displayPaths( stack<Path> pathsToDisplay, int numVertices )
 {
 	while(!pathsToDisplay.empty())
 	{
-		cout<<"Path: ";
+		cout<<"Path: [";
 		for(int i=0;i<numVertices+1;i++)
 		{
 			cout<<pathsToDisplay.top().getCityIndexAt(i);
+			if(i != numVertices)
+			{
+				cout<<",";
+			}
 		}
-		cout<<endl;
+		cout<<"]"<<endl;
+		cout<<"Cost: "<<pathsToDisplay.top().getTraversalCost()<<endl;
 		pathsToDisplay.pop();
 	}
+}
+
+bool writePathsToFile(string filename)
+{
+	return true;
 }

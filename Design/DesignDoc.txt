@@ -59,10 +59,13 @@ Description: Adjacency matrix based
 Description: Bare bones, contains int array with each element corresponding to a vertex in a graph.
     private: 
         int* pathIndexArray;     //{0,x,x,x,x,0} Reno = index 0
+	int traversalCost;
     public:
         Path(int* innerCityIndexArray, int arraySize)
         void    setAtIndex(int index, int cityIndex);
         int     getDataAtIndex(int index);
+	void	setTraversalCost(int traversalCost);
+	int	getTraversalCost();
 
 
 (Main file/driver)
@@ -74,7 +77,7 @@ in main():
 
 Functions:
 	Graph		ReadGraphFromFile(std::string filename); 
-        stack<Path>     generatePaths(int numVertices);	
+        stack<Path>     generatePaths(int numVertices, Graph aGraph); //should generate path as well as traversal cost
         void    	findShortestPath(Graph g, Stack<Path> s);
         void    	displayPaths(stack<Path> pathsToDisplay, int numVertices);
         bool    	writePathsToFile(std::string filename);
