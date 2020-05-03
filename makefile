@@ -4,10 +4,10 @@ CFLAGS = -Wall -c $(DEBUG)
 LFLAGS = -Wall $(DEBUG) 
 
 #******* TravelingSalesPerson Driver************************
-TravelingSalesPerson : TravelingSalesPerson.o Path.o #Graph.cpp
+TravelingSalesPerson : TravelingSalesPerson.o Path.o GraphPlaceholder.o Graph.o
 	$(CC) $(LFLAGS)  TravelingSalesPerson.o -o TravelingSalesPerson
 
-TravelingSalesPerson.o : TravelingSalesPerson.cpp Path.cpp #Graph.cpp  
+TravelingSalesPerson.o : TravelingSalesPerson.cpp Path.cpp GraphPlaceholder.cpp Graph.cpp  
 	$(CC) $(CFLAGS)  TravelingSalesPerson.cpp
 # **********************************************************
 # *******Testing Graph************************
@@ -26,8 +26,11 @@ TravelingSalesPerson.o : TravelingSalesPerson.cpp Path.cpp #Graph.cpp
 # 	$(CC) $(CFLAGS)  PathTest.cpp
 # *******************************************
 
-# Graph.o : Graph.cpp Path.cpp
-# 	$(CC) $(CFLAGS)  Graph.cpp
+GraphPlaceholder.o : GraphPlaceholder.cpp Path.cpp
+	$(CC) $(CFLAGS)  GraphPlaceholder.cpp
+
+Graph.o : Graph.cpp Path.cpp
+	$(CC) $(CFLAGS)  Graph.cpp
 	
 Path.o : Path.cpp
 	$(CC) $(CFLAGS)  Path.cpp

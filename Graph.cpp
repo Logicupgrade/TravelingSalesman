@@ -1,7 +1,7 @@
 #include "Graph.h"
 
 Graph::Graph()
-: m_vertexcount(0),m_adjacencymatrix(nullptr)
+: m_adjacencymatrix(nullptr),m_vertexcount(0)
 {
 }
 
@@ -62,6 +62,12 @@ int Graph::getEdgeCost(int v1, int v2)
     {
         return m_adjacencymatrix[v1][v2];
     }
+
+    //wrote this to get rid of compiler warning
+    else
+    {
+    	return -1;
+    }
 }
 
 int Graph::TraversePath(Path &currentPath)
@@ -75,17 +81,7 @@ int Graph::TraversePath(Path &currentPath)
     return total;
 }
 
-void Graph::displayMatrix()
-{
-	for(int i=0; i<m_vertexcount; i++)
-	{
-		for(int j=0; j<m_vertexcount; j++)
-		{
-			std::cout<<"["<<i<<"]["<<j<<"]="<<m_adjacencymatrix[i][j]<<" , ";
-		}
-		std::cout<<std::endl;
-	}
-}
+
 
 void Graph::addVertex(std::string newEntry)
 {
@@ -130,18 +126,6 @@ void Graph::addVertex(std::string newEntry)
 
 }
 
-int Graph::getIndex(std::string s)
-{
-    for(int i=0;i<m_vertexcount;i++)
-    {
-        if(m_vertices[i]==s)
-        {
-            return i;
-        }
-    }
-    return -1;
-}
-
 void Graph::addEdge(std::string v1, std::string v2,int weight)
 {
     m_adjacencymatrix[getIndex(v1)][getIndex(v2)] = weight;
@@ -155,4 +139,28 @@ void Graph::removeEdge(std::string v1, std::string v2)
 std::string Graph::getVertex(int index)
 {
     return m_vertices[index];
+}
+
+int Graph::getIndex(std::string s)
+{
+    for(int i=0;i<m_vertexcount;i++)
+    {
+        if(m_vertices[i]==s)
+        {
+            return i;
+        }
+    }
+    return -1;
+}
+
+void Graph::displayMatrix()
+{
+	for(int i=0; i<m_vertexcount; i++)
+	{
+		for(int j=0; j<m_vertexcount; j++)
+		{
+			std::cout<<"["<<i<<"]["<<j<<"]="<<m_adjacencymatrix[i][j]<<" , ";
+		}
+		std::cout<<std::endl;
+	}
 }

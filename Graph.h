@@ -11,15 +11,16 @@ public:
     Graph(int vertexnum,std::string *vertices,int** adjmatrix);
     Graph(const Graph& other);
     ~Graph();
-    int TraversePath(Path &currentPath);    //returns cost of path, sets path cost in path object
-    int getEdgeCost(int v1, int v2);    //adjacent edges as parameter
 
+    void clear();
+    int getEdgeCost(int v1, int v2);    //adjacent edges as parameter
+    int TraversePath(Path &currentPath);    //returns cost of path, sets path cost in path object
     void addVertex(std::string newEntry);
     void addEdge(std::string v1, std::string v2,int weight);
     void removeEdge(std::string v1, std::string v2);
     std::string getVertex(int index);   
     int getIndex(std::string s);    //-1 for not found
-    void clear();
+    
 
     void displayMatrix();   //debug display
 
