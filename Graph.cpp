@@ -70,7 +70,7 @@ int Graph::getEdgeCost(int v1, int v2)
     }
 }
 
-int Graph::TraversePath(Path &currentPath)
+int Graph::traversePath(Path &currentPath)
 {
     int total=0;
     for(int i=0;i<currentPath.getPathArraySize()-1;i++)

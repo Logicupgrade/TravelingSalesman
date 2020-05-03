@@ -1,5 +1,5 @@
 #include "Path.cpp"
-#include "GraphPlaceholder.cpp"
+// #include "GraphPlaceholder.cpp"
 #include "Graph.cpp"
 
 #include <fstream>
@@ -11,12 +11,9 @@
 
 using namespace std;
 
-
-
-
-GraphPlaceholder ReadGraphFromFile(string filename);
-stack<Path> generatePaths(int numVertices, GraphPlaceholder aGraph);
-Path findShortestPath(GraphPlaceholder aGraph, stack<Path> pathStack);
+Graph ReadGraphFromFile(string filename);
+stack<Path> generatePaths(int numVertices, Graph aGraph);
+Path findShortestPath(Graph aGraph, stack<Path> pathStack);
 void displayPaths( stack<Path> pathsToDisplay, int numVertices );
 bool writePathsToFile(string filename);
 
@@ -28,26 +25,19 @@ int main()
 	//important to most of generation
 	int vertexCount = 5;
 
-	stack<Path> flapjacks;
-	GraphPlaceholder theGraph = ReadGraphFromFile(inputFile);
+	stack<Path> pathStack;
 
-	// int testPath[4]= {1,2,3,4};
-	// Path TestPath(testPath,4);
-	// theGraph.displayMatrix();
+	Graph theGraph = ReadGraphFromFile(inputFile);
 
-	flapjacks = generatePaths(vertexCount,theGraph);
+	pathStack = generatePaths(vertexCount,theGraph);
 
-	displayPaths( flapjacks, vertexCount );
-
+	displayPaths( pathStack, vertexCount );
+	findShortestPath(theGraph, pathStack);
 	
-
-	findShortestPath(theGraph, flapjacks);
-	
-
 	return 0;
 }
 
-GraphPlaceholder ReadGraphFromFile(string filename)
+Graph ReadGraphFromFile(string filename)
 {
 	bool gotVertices = false;
 	int countVertices = 0;
@@ -123,7 +113,8 @@ GraphPlaceholder ReadGraphFromFile(string filename)
 
 	getGraph.close();
 
-	GraphPlaceholder inGraph(countVertices, vertices, inMatrix);
+	//OLD// GraphPlaceholder inGraph(countVertices, vertices, inMatrix);
+	Graph inGraph(countVertices, vertices, inMatrix);
 
 	return inGraph;
 }
@@ -134,7 +125,7 @@ GraphPlaceholder ReadGraphFromFile(string filename)
 //for this project we will use the array {{1,2}}
 //use int** noEdgePairArray as parameter
 //put ifs in forloop iterating though all noEdgePair
-stack<Path> generatePaths(int numVertices, GraphPlaceholder aGraph)
+stack<Path> generatePaths(int numVertices, Graph aGraph)
 {
 	stack<Path> lameStack;
 
@@ -172,12 +163,14 @@ stack<Path> generatePaths(int numVertices, GraphPlaceholder aGraph)
 
     		//set traveral time 
     		tempPushPath.setTraversalCost( aGraph.traversePath(tempPushPath) );
-
+    		//aGraph.traversePath(tempPushPath)
+    		//traverse sets cost in path (redundant, but would like to choose to not update path cost with graph)
     		
     		//set city name array using graph as reference
     		for( int i=0;i<tempPushPath.getPathArraySize();i++ )
     		{
-	   			tempPushPath.setCityNameAt( aGraph.getVertexName( tempPushPath.getCityIndexAt(i) ) , i);
+	   			tempPushPath.setCityNameAt( aGraph.getVertex( tempPushPath.getCityIndexAt(i) ) , i);
+	   										//OLD//aGraph.getVertexName( tempPushPath.getCityIndexAt(i) )
     		}
 
     		//pushes path to stack
@@ -191,7 +184,7 @@ stack<Path> generatePaths(int numVertices, GraphPlaceholder aGraph)
     return lameStack;
 }
 
-Path findShortestPath(GraphPlaceholder aGraph, stack<Path> pathStack)
+Path findShortestPath(Graph aGraph, stack<Path> pathStack)
 {
 	int vertexCount = pathStack.top().getPathArraySize();
 
@@ -208,10 +201,6 @@ Path findShortestPath(GraphPlaceholder aGraph, stack<Path> pathStack)
 
 	while( !pathStack.empty() )
 	{	
-		//Path Display function *******************************
-		
-		//*****************************************************
-
 		currentPathCost = aGraph.traversePath( pathStack.top() );
 
 		if( currentPathCost < lowestPathCost )

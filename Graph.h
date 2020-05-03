@@ -14,7 +14,7 @@ public:
 
     void clear();
     int getEdgeCost(int v1, int v2);    //adjacent edges as parameter
-    int TraversePath(Path &currentPath);    //returns cost of path, sets path cost in path object
+    int traversePath(Path &currentPath);    //returns cost of path, sets path cost in path object
     void addVertex(std::string newEntry);
     void addEdge(std::string v1, std::string v2,int weight);
     void removeEdge(std::string v1, std::string v2);
