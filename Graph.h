@@ -1,7 +1,7 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 #include <iostream>
-#include "../Path.h"
+#include "Path.h"
 #include <vector>
 
 class Graph
@@ -17,20 +17,17 @@ public:
     void addVertex(std::string newEntry);
     void addEdge(std::string v1, std::string v2,int weight);
     void removeEdge(std::string v1, std::string v2);
-    std::string getVertex(int index);   //
+    std::string getVertex(int index);   
     int getIndex(std::string s);    //-1 for not found
     void clear();
 
     void displayMatrix();   //debug display
 
 private:
-    // Helper Methods
-
     // Members
     std::vector<std::string> m_vertices;
     int **m_adjacencymatrix;
     int m_vertexcount;
-
 };
 
 #endif // GRAPH_H
