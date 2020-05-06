@@ -15,6 +15,7 @@ private:
 	int traversalCost;
 	string vertexNames[6];
 public:
+	Path();
 	Path(int* innerCityIndexArray, int arraySize);
 	Path(const Path& aPath);
 	~Path();

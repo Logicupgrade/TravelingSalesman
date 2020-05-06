@@ -15,24 +15,32 @@ Graph ReadGraphFromFile(string filename);
 stack<Path> generatePaths(int numVertices, Graph aGraph);
 Path findShortestPath(Graph aGraph, stack<Path> pathStack);
 void displayPaths( stack<Path> pathsToDisplay, int numVertices );
-bool writePathsToFile(string filename);
+bool writePathsToFile(stack<Path> pathsToDisplay, int numVertices, Path shortPath, string filename);
 
 
 int main()
 {
-	string inputFile = "input.txt";
-
 	//important to most of generation
 	int vertexCount = 5;
 
+	//file I/O names
+	string inputFile = "input.txt";
+	string outputFile = "output.txt";
+
+	//initializing objects: Path,Stack<Paths>,Graph
+	Path shortestPath;
 	stack<Path> pathStack;
-
 	Graph theGraph = ReadGraphFromFile(inputFile);
-
 	pathStack = generatePaths(vertexCount,theGraph);
 
+	//Finding shortestPath
+	shortestPath = findShortestPath(theGraph, pathStack);
+
+	//display all of the Paths
 	displayPaths( pathStack, vertexCount );
-	findShortestPath(theGraph, pathStack);
+
+	//Write all of the Paths, Shortest Path, and Shortest Path Cost to file
+	writePathsToFile( pathStack, vertexCount, shortestPath, outputFile );
 	
 	return 0;
 }
@@ -188,7 +196,7 @@ Path findShortestPath(Graph aGraph, stack<Path> pathStack)
 {
 	int vertexCount = pathStack.top().getPathArraySize();
 
-	int lowestPathCost = 1000000;
+	int shortestPathCost = 1000000;
 	int tempPath[vertexCount+1];
 	int currentPathCost;
 
@@ -197,26 +205,26 @@ Path findShortestPath(Graph aGraph, stack<Path> pathStack)
 		tempPath[i]=0;
 	}
 
-	Path lowestPath(tempPath,vertexCount);
+	Path shortestPath(tempPath,vertexCount);
 
 	while( !pathStack.empty() )
 	{	
 		currentPathCost = aGraph.traversePath( pathStack.top() );
 
-		if( currentPathCost < lowestPathCost )
+		if( currentPathCost < shortestPathCost )
 		{
-			lowestPathCost = currentPathCost;
-			lowestPath = pathStack.top();
+			shortestPathCost = currentPathCost;
+			shortestPath = pathStack.top();
 		}
 		pathStack.pop();
 	}
 
 	
 	cout<<"Shortest Path!: [";
-	for( int i=0; i<lowestPath.getPathArraySize();i++ )
+	for( int i=0; i<shortestPath.getPathArraySize();i++ )
 	{
-		cout<<lowestPath.getCityIndexAt(i);
-		if(i != lowestPath.getPathArraySize()-1)
+		cout<<shortestPath.getCityIndexAt(i);
+		if(i != shortestPath.getPathArraySize()-1)
 		{
 			cout<<",";
 		}
@@ -226,9 +234,9 @@ Path findShortestPath(Graph aGraph, stack<Path> pathStack)
 		}
 	}
 	
-	cout<<"Shortest Path Cost!: "<<lowestPathCost<<endl;
+	cout<<"Shortest Path Cost!: "<<shortestPathCost<<endl;
 
-	return lowestPath;
+	return shortestPath;
 }
 
 void displayPaths( stack<Path> pathsToDisplay, int numVertices )
@@ -250,7 +258,53 @@ void displayPaths( stack<Path> pathsToDisplay, int numVertices )
 	}
 }
 
-bool writePathsToFile(string filename)
+bool writePathsToFile(stack<Path> pathsToDisplay, int numVertices, Path shortPath, string filename)
 {
-	return true;
+	bool wroteToFile = false;
+	ofstream theFile (filename);
+
+	if(theFile.is_open())
+	{
+		//write all paths to file
+		while(!pathsToDisplay.empty())
+		{
+			theFile<<"Path: [";
+			for(int i=0;i<numVertices+1;i++)
+			{
+				theFile<<pathsToDisplay.top().getCityIndexAt(i);
+				if(i != numVertices)
+				{
+					theFile<<",";
+				}
+			}
+			theFile<<"]"<<endl;
+			theFile<<"Cost: "<<pathsToDisplay.top().getTraversalCost()<<endl;
+			pathsToDisplay.pop();
+		}
+
+		theFile<<endl;
+		theFile<<"Shortest Path!: [";
+		for( int i=0; i<shortPath.getPathArraySize();i++ )
+		{
+			theFile<<shortPath.getCityIndexAt(i);
+			if(i != shortPath.getPathArraySize()-1)
+			{
+				theFile<<",";
+			}
+			else
+			{
+				theFile<<"]"<<endl;
+			}
+		}
+		theFile<<"Shortest Path Cost!: "<<shortPath.getTraversalCost()<<endl;
+		theFile.close();
+		wroteToFile = true;
+	}
+
+	else
+	{
+		cout<<"Unable to open File"<<endl;
+	}
+
+	return wroteToFile;
 }

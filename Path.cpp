@@ -5,6 +5,10 @@
 
 using namespace std;
 
+Path::Path()
+{
+}
+
 Path::Path(int* innerCityIndexArray, int arraySize)
 {
 	pathArraySize = arraySize+2;
